@@ -1,0 +1,21 @@
+# Local decks, attempts, Anki synchronization journal and imported images
+/data.json
+/data.tmp
+/anki-reviews.json
+/anki-reviews.tmp
+/static/media/
+*.apkg
+*.colpkg
+*.anki2
+*.anki21
+*.db
+*.sqlite*
+# Local credentials and runtime files
+.env
+.env.*
+!.env.example
+*.log
+*.pid
+__pycache__/
+*.py[cod]
+.DS_Store

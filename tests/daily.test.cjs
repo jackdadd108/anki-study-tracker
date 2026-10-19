@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict'), D=require('../static/daily.js');
+const data={attempts:[],daily_completions:[]};
+let s=D.stats(data,new Date('2026-10-16T06:00:00+05:45'));
+assert.equal(s.required,18.75);assert.equal(s.elapsed,0);assert.equal(s.remaining,300);
+s=D.stats(data,new Date('2026-10-16T14:00:00+05:45'));assert.equal(s.elapsed,50);assert.equal(s.delta,-150);assert.equal(s.required,37.5);
+assert.equal(D.nepalDay('2026-10-16T18:14:59Z'),'2026-10-16');assert.equal(D.nepalDay('2026-10-16T18:15:00Z'),'2026-10-17');
+data.attempts=[{id:'one',deck_id:'deck',card_id:'card',answered_at:'2026-10-16T06:00:00+05:45'}];data.attempts.push({...data.attempts[0]});
+s=D.stats(data,new Date('2026-10-16T14:00:00+05:45'));assert.equal(s.completed,1);assert.equal(s.newCount,1);
+data.daily_completions.push({id:'two',deck_id:'deck',card_id:'card',answered_at:'2026-10-16T08:00:00+05:45'});s=D.stats(data,new Date('2026-10-16T14:00:00+05:45'));assert.equal(s.completed,2);assert.equal(s.revisionCount,1);
+s=D.stats(data,new Date('2026-10-17T00:00:00+05:45'));assert.equal(s.completed,0);assert.equal(s.history[0].count,2);
+s=D.stats(data,new Date('2026-10-16T22:00:00+05:45'));assert.equal(s.required,null);assert.equal(s.left,0);assert.equal(s.elapsed,100);
+data.daily_settings={target:1,start:'06:00',deadline:'22:00'};s=D.stats(data,new Date('2026-10-16T23:00:00+05:45'));assert.equal(s.remaining,0);assert.equal(s.required,0);assert.equal(s.percent,200);
+s=D.stats({attempts:[]},new Date('2026-10-16T04:00:00+05:45'));assert.equal(s.required,18.75);assert.equal(s.elapsed,0);
+assert.equal(D.stats(JSON.parse(JSON.stringify(data)),new Date('2026-10-16T12:00:00+05:45')).completed,2);
+console.log('Daily calculations passed: schedule, rates, deadlines, targets, Nepal midnight, history, revisions, duplicate IDs, restoration.');
